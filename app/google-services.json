@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1017268754105",
+    "firebase_url": "https://android-degree-studentpr-cdcce.firebaseio.com",
+    "project_id": "android-degree-studentpr-cdcce",
+    "storage_bucket": "android-degree-studentpr-cdcce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017268754105:android:cbdc59d12f95c02ea62d68",
+        "android_client_info": {
+          "package_name": "com.barmej.streetissues"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017268754105-o1ka9c9d3aba9u1qm4ski2kh58mcm9q4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.barmej.streetissues",
+            "certificate_hash": "106cb70a9e0551e4489754e38f7c74aec3547523"
+          }
+        },
+        {
+          "client_id": "1017268754105-9u96t3o2thrquea5t166lmm2v5b5kijk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnz_ugI3rWIJmhpIwulIInjcLqZZ8-cF4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017268754105-9u96t3o2thrquea5t166lmm2v5b5kijk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
