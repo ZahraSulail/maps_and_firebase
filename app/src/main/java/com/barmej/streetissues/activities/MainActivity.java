@@ -8,8 +8,8 @@ import android.view.View;
 import com.barmej.streetissues.R;
 import com.barmej.streetissues.fragments.IssuesListFragment;
 import com.barmej.streetissues.fragments.MapFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mAddFloatingActionButton;
     private Toolbar mToolbar;
     private ViewPager mViewPager;
-    private TabLayout mTabLayout;
     private MenuItem listMenuItem;
     private  MenuItem mapMenuItem;
 
@@ -50,12 +49,8 @@ public class MainActivity extends AppCompatActivity {
          */
         mViewPager = findViewById(R.id.view_pager_home);
 
-        /*
-          find TabLayout by id
-         */
-        mTabLayout = findViewById(R.id.tab_layout_home);
 
-        /*\
+        /*
          ViewPagerAdapter object
          */
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter( getSupportFragmentManager());
@@ -65,11 +60,6 @@ public class MainActivity extends AppCompatActivity {
          */
         viewPagerAdapter.addFragment( new IssuesListFragment());
         viewPagerAdapter.addFragment( new MapFragment());
-
-        /*
-          Set tabLayout with viewPager
-         */
-        mTabLayout.setupWithViewPager(mViewPager);
 
         /*
           Set adapter to the view pager
@@ -88,6 +78,48 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity( new Intent(MainActivity.this, AddNewIssueActivity.class) );
+            }
+        } );
+
+        /*
+          Bottom navigation menu to navigate between fragments
+         */
+        final BottomNavigationView bottomNavigationView = findViewById( R.id.bottom_nav );
+        bottomNavigationView.setSelectedItemId( R.id.action_list );
+        bottomNavigationView.setOnNavigationItemSelectedListener( new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_list:
+                        mViewPager.setCurrentItem( 0 );
+                        break;
+                    case R.id.action_map:
+                        mViewPager.setCurrentItem( 1 );
+                        break;
+                }
+                return false;
+            }
+        } );
+
+        mViewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 0) {
+                    bottomNavigationView.setSelectedItemId(R.id.action_list  );
+                } else {
+                    bottomNavigationView.setSelectedItemId( R.id.action_map );
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         } );
     }

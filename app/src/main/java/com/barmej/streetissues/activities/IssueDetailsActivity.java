@@ -1,28 +1,32 @@
 package com.barmej.streetissues.activities;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.barmej.streetissues.R;
 import com.barmej.streetissues.data.Issue;
-import com.barmej.streetissues.fragments.IssuesListFragment;
-import com.barmej.streetissues.fragments.MapFragment;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 
-public class IssueDetailsActivity extends AppCompatActivity {
+public class IssueDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
     /*
      String key to get data fro intent
      */
     public static final String ISSUE_DATA = "issue_data";
+    private static final String MAPVIEW_BUNDLE_KEY = "mapViewBundleKey";
 
+    Issue issue;
     /*
      Define required variables
      */
@@ -30,6 +34,10 @@ public class IssueDetailsActivity extends AppCompatActivity {
     private TextView mIssueTitleTextView;
     private TextView mIssueDescriptionTextView;
     private Toolbar mToolbar;
+
+    private MapView mMapView;
+    private GoogleMap mGoogleMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,58 +56,87 @@ public class IssueDetailsActivity extends AppCompatActivity {
         mIssueImageView = findViewById(R.id.image_view__issue_photo);
         mIssueTitleTextView = findViewById(R.id.text_view_issue_title);
         mIssueDescriptionTextView = findViewById(R.id.text_view_issue_description);
+        mMapView = findViewById( R.id.map_view );
+        mMapView.onCreate( savedInstanceState );
+        Bundle mapViewBundle = null;
+        if(savedInstanceState != null){
+            mapViewBundle = savedInstanceState.getBundle( MAPVIEW_BUNDLE_KEY );
+
+        }
+
+        mMapView = findViewById( R.id.map_view );
+        mMapView.onCreate( mapViewBundle );
+        mMapView.getMapAsync( this );
 
         /*
           getIntent to get dat from Issue object
          */
         if(getIntent() != null && getIntent().getExtras() != null){
-            Issue issue = getIntent().getExtras().getParcelable(ISSUE_DATA);
+            issue = getIntent().getExtras().getParcelable(ISSUE_DATA);
             if(issue!= null){
                 getSupportActionBar().setTitle(issue.getTitle());
                 mIssueDescriptionTextView.setText(issue.getDescription());
                 Glide.with( this).load(issue.getPhoto()).into(mIssueImageView);
+
             }
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState( outState );
+        Bundle mapViewBundle = outState.getBundle( MAPVIEW_BUNDLE_KEY );
+        if(mapViewBundle == null){
+            mapViewBundle = new Bundle();
+            outState.putBundle( MAPVIEW_BUNDLE_KEY, mapViewBundle );
+        }
+        mMapView.onSaveInstanceState( mapViewBundle );
+    }
 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate( R.menu.main_menu, menu );
-        return true;
+/*
+  Displaying Issue geopoint location on the map
+ */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        LatLng latLng = new LatLng(issue.getLocation().getLatitude(), issue.getLocation().getLongitude());
+        googleMap.addMarker( new MarkerOptions()
+                .position( latLng ));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( latLng, 16  );
+        googleMap.moveCamera( cameraUpdate );
+
+    }
+    /*
+     Map Lifecycle mehtods
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mMapView.onStart();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    protected void onResume() {
+        super.onResume();
+        mMapView.onResume();
 
-        int id = item.getItemId();
-        if(id == R.id.action_list){
-            showIssueListFragment();
-            return  true;
-        }else{
-            if(id == R.id.action_map){
-                showMapFragment();
-            }
-        }
-
-
-        return true;
     }
 
-    private void showIssueListFragment(){
-        Fragment isuueListFragment = new IssuesListFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace( R.id.layout_issue_details, isuueListFragment )
-                .addToBackStack( null)
-                .commit();
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.onPause();
     }
 
-    private void showMapFragment(){
-        Fragment mapFragment = new MapFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace( R.id.layout_issue_details, mapFragment )
-                .addToBackStack( null )
-                .commit();
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mMapView.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
     }
 }

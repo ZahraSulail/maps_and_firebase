@@ -27,6 +27,7 @@ public class Issue implements Parcelable {
         title = in.readString();
         description = in.readString();
         photo = in.readString();
+        location = new GeoPoint( in.readDouble(), in.readDouble() );
     }
 
     public static final Creator<Issue> CREATOR = new Creator<Issue>() {
@@ -83,5 +84,7 @@ public class Issue implements Parcelable {
         dest.writeString(title);
         dest.writeString(description);
         dest.writeString(photo);
+        dest.writeDouble(location.getLatitude());
+        dest.writeDouble(location.getLongitude());
     }
 }

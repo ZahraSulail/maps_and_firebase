@@ -87,8 +87,9 @@ public class IssuesListFragment extends Fragment implements IssueListAdapter.OnI
                 mIssues.clear();
                 if(e == null){
                     for(QueryDocumentSnapshot document: queryDocumentSnapshots){
-                        mIssues.add(document.toObject( Issue.class ));
-
+                        Issue issue = document.toObject( Issue.class );
+                        mIssues.add(issue);
+                        System.out.println(issue.getTitle());
                     }
                     //Notify adpter aboutnchange
                     mIssuesListAdapter.notifyDataSetChanged();
