@@ -106,35 +106,36 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     private ImageView mIssueImageView;
     private Button mChoosePhotoButton;
     private Button mAddIssueButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_add_new_issue);
+        setContentView( R.layout.activity_add_new_issue );
 
         /*
           Set the tool bar
          */
-        Toolbar mToolbar = findViewById(R.id.toolBar_home);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar mToolbar = findViewById( R.id.toolBar_home );
+        setSupportActionBar( mToolbar );
+        getSupportActionBar().setDisplayHomeAsUpEnabled( true );
 
         /*
          SupportMapFragment to find Map by id
          */
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById( R.id.map );
+        mapFragment.getMapAsync( this );
 
         /*
           Find views by Id's
          */
-        mCoordinatorLayout = findViewById(R.id.add_issue_coord_layout);
-        mIssueTitleTextInputLayout = findViewById(R.id.input_layout_title);
-        mIssuedescriptionTextInputLayout = findViewById(R.id.input_layout_description);
-        mIssueTilteTextInputEditText = findViewById(R.id.edit_text_title);
-        mIssueDescriptionTextInputEditText = findViewById(R.id.edit_text_description);
-        mIssueImageView = findViewById(R.id.image_view_photo);
-        mChoosePhotoButton = findViewById(R.id.button_choose_photo);
-        mAddIssueButton = findViewById(R.id.button_add_issue);
+        mCoordinatorLayout = findViewById( R.id.add_issue_coord_layout );
+        mIssueTitleTextInputLayout = findViewById( R.id.input_layout_title );
+        mIssuedescriptionTextInputLayout = findViewById( R.id.input_layout_description );
+        mIssueTilteTextInputEditText = findViewById( R.id.edit_text_title );
+        mIssueDescriptionTextInputEditText = findViewById( R.id.edit_text_description );
+        mIssueImageView = findViewById( R.id.image_view_photo );
+        mChoosePhotoButton = findViewById( R.id.button_choose_photo );
+        mAddIssueButton = findViewById( R.id.button_add_issue );
 
         /*
           Call requestLocationPermission() and requestStoragePermission() methods
@@ -148,7 +149,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         mChoosePhotoButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lunchGalleryIntent();
+                lanchGalleryIntent();
             }
         } );
 
@@ -160,13 +161,13 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
             public void onClick(View v) {
                 mIssueTitleTextInputLayout.setError( null );
                 mIssuedescriptionTextInputLayout.setError( null );
-                if(TextUtils.isEmpty( mIssueTilteTextInputEditText.getText())){
+                if (TextUtils.isEmpty( mIssueTilteTextInputEditText.getText() )) {
                     mIssueTitleTextInputLayout.setError( getString( R.string.error_msg_title ) );
-                }else {
-                    if(TextUtils.isEmpty( mIssueDescriptionTextInputEditText.getText() )){
+                } else {
+                    if (TextUtils.isEmpty( mIssueDescriptionTextInputEditText.getText() )) {
                         mIssuedescriptionTextInputLayout.setError( getString( R.string.error_msg_description ) );
-                    }else{
-                        if(mIssuePhotoUri != null){
+                    } else {
+                        if (mIssuePhotoUri != null) {
                             addIssueToFirebase();
 
                         }
@@ -187,6 +188,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         if (mLocationPermissionGranted) {
+
             requestDeviceCurrentLocation();
         }
         mGoogleMap.setOnMapClickListener( new GoogleMap.OnMapClickListener() {
@@ -200,15 +202,15 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                 mGoogleMap.addMarker( markerOptions );
             }
         } );
-
     }
+
     /*
       AddIssueTo firebase method
      */
-    private void addIssueToFirebase(){
+    private void addIssueToFirebase() {
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReference = firebaseStorage.getReference();
-        final StorageReference photoStorageReference = storageReference.child( UUID.randomUUID().toString());
+        final StorageReference photoStorageReference = storageReference.child( UUID.randomUUID().toString() );
         final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         mDialog = new ProgressDialog( this );
         mDialog.setIndeterminate( true );
@@ -218,21 +220,22 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         photoStorageReference.putFile( mIssuePhotoUri ).addOnCompleteListener( new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     photoStorageReference.getDownloadUrl().addOnCompleteListener( new OnCompleteListener<Uri>() {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
-                            if(task.isSuccessful()){
-                                final Issue issue = new Issue();
-                                issue.setTitle( mIssueTilteTextInputEditText.getText().toString());
-                                issue.setDescription( mIssueDescriptionTextInputEditText.getText().toString());
-                                issue.setPhoto(task.getResult().toString());
-                                issue.setLocation(new GeoPoint( mSelectedLating.latitude, mSelectedLating.longitude));
-                                firebaseFirestore.collection( "issues").add( issue ).addOnCompleteListener( new OnCompleteListener<DocumentReference>() {
+                            if (task.isSuccessful()) {
+                                final Issue journey = new Issue();
+                                journey.setTitle( mIssueTilteTextInputEditText.getText().toString() );
+                                journey.setDescription( mIssueDescriptionTextInputEditText.getText().toString() );
+
+                                journey.setPhoto( task.toString() );
+                                journey.setLocation( new GeoPoint( mSelectedLating.latitude, mSelectedLating.longitude ) );
+                                firebaseFirestore.collection( "journeys" ).add( journey ).addOnCompleteListener( new OnCompleteListener<DocumentReference>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentReference> task) {
-                                        if(task.isSuccessful()){
-                                            Snackbar.make( mCoordinatorLayout, R.string.add_issue_success, Snackbar.LENGTH_SHORT ).addCallback( new Snackbar.Callback(){
+                                        if (task.isSuccessful()) {
+                                            Snackbar.make( mCoordinatorLayout, R.string.add_issue_success, Snackbar.LENGTH_SHORT ).addCallback( new Snackbar.Callback() {
                                                 @Override
                                                 public void onDismissed(Snackbar transientBottomBar, int event) {
                                                     super.onDismissed( transientBottomBar, event );
@@ -240,52 +243,50 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                                                     finish();
                                                 }
                                             } ).show();
-                                        }else {
+                                        } else {
                                             Snackbar.make( mCoordinatorLayout, R.string.add_issue_failed, Snackbar.LENGTH_LONG ).show();
                                             mDialog.dismiss();
                                         }
                                     }
                                 } );
-                            }else {
+                            } else {
                                 Snackbar.make( mCoordinatorLayout, R.string.uploaded_task_failed, Snackbar.LENGTH_LONG ).show();
                                 mDialog.dismiss();
+
                             }
                         }
                     } );
-                }else {
+                } else {
                     Snackbar.make( mCoordinatorLayout, R.string.add_issue_failed, Snackbar.LENGTH_LONG );
                     mDialog.dismiss();
-
                 }
             }
         } );
-
-
     }
 
     /*
       Request permission to access location by google map
      */
-    private void requestLocationPermission(){
+    private void requestLocationPermission() {
         mLocationPermissionGranted = false;
-        if(ContextCompat.checkSelfPermission( getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission( getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
-        }else{
-            ActivityCompat.requestPermissions( this, new String [] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ACCESS_LOCATION );
 
+        } else {
+
+            ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ACCESS_LOCATION );
         }
-
     }
 
     /*
       Request permission to read external storage
      */
-    private void requestStoragePermission(){
+    private void requestStoragePermission() {
         mReadStoragePermissionGranted = false;
-        if(ContextCompat.checkSelfPermission( getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE ) == PackageManager.PERMISSION_GRANTED) {
-           mReadStoragePermissionGranted = true;
-        }else{
-            ActivityCompat.requestPermissions( this, new String [] {Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_READ_STORAGE );
+        if (ContextCompat.checkSelfPermission( getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE ) == PackageManager.PERMISSION_GRANTED) {
+            mReadStoragePermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_READ_STORAGE );
 
         }
     }
@@ -293,7 +294,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     /*
       requestDeviceCurrentLocation method to access current user location
      */
-    private void requestDeviceCurrentLocation(){
+    private void requestDeviceCurrentLocation() {
 
         if (ActivityCompat.checkSelfPermission( this, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission( this, Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -311,18 +312,18 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         locationResult.addOnSuccessListener( new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location != null){
+                if (location != null) {
                     mlastKnownLocation = location;
                     mSelectedLating = new LatLng( mlastKnownLocation.getLatitude(), mlastKnownLocation.getLongitude() );
-                    mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( mSelectedLating , 15 ));
+                    mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( mSelectedLating, 15 ) );
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position( mSelectedLating );
-                    markerOptions.icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-                }else{
+                    markerOptions.icon( BitmapDescriptorFactory.defaultMarker( BitmapDescriptorFactory.HUE_BLUE ) );
+
+                } else {
+
                     mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( DEFAULT_LOCATION, 15 ) );
                 }
-
-
             }
         } );
     }
@@ -330,38 +331,39 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     /*
       onRequestPermissionResult method
      */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult( requestCode, permissions, grantResults );
-
-        switch (requestCode){
+        switch (requestCode) {
             case PERMISSION_REQUEST_ACCESS_LOCATION:
                 mLocationPermissionGranted = false;
-                if(grantResults.length < 0 && grantResults [0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
+                    requestDeviceCurrentLocation();
                 }
                 break;
             case PERMISSION_REQUEST_READ_STORAGE:
                 mReadStoragePermissionGranted = false;
-                if(grantResults.length < 0 && grantResults [0] == PackageManager.PERMISSION_GRANTED){
-                    mReadStoragePermissionGranted= true;
-                    requestDeviceCurrentLocation();
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mReadStoragePermissionGranted = true;
                 }
                 break;
         }
     }
+
     /*
      onActivityResult method to get result when access device media file
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult( requestCode, resultCode, data );
-        if(requestCode == REQUEST_GET_PHOTO){
-            if(resultCode == RESULT_OK){
+
+        if (requestCode == REQUEST_GET_PHOTO) {
+            if (resultCode == RESULT_OK) {
                 try {
                     mIssuePhotoUri = data.getData();
                     mIssueImageView.setImageURI( mIssuePhotoUri );
-                }catch (Exception e){
+                } catch (Exception e) {
                     Snackbar.make( mCoordinatorLayout, R.string.photo_selected_error, Snackbar.LENGTH_LONG ).show();
                 }
             }
@@ -371,10 +373,13 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     /*
      LunchGalleryIntent to access device media and choose image
      */
-    private void lunchGalleryIntent(){
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory( Intent.CATEGORY_BROWSABLE );
-        intent.setType("image/*");
-        startActivityForResult( Intent.createChooser( intent, getString( R.string.choose_photo)), REQUEST_GET_PHOTO );
+
+    private void lanchGalleryIntent() {
+
+        Intent intent = new Intent( Intent.ACTION_GET_CONTENT );
+        intent.addCategory( Intent.CATEGORY_OPENABLE );
+        intent.setType( "image/*" );
+        startActivityForResult( Intent.createChooser( intent, getString( R.string.choose_photo ) ), REQUEST_GET_PHOTO );
+
     }
 }
