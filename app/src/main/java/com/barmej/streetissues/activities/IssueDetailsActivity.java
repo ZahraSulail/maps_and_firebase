@@ -98,6 +98,7 @@ public class IssueDetailsActivity extends AppCompatActivity implements OnMapRead
  */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        this.mGoogleMap = googleMap;
         LatLng latLng = new LatLng(issue.getLocation().getLatitude(), issue.getLocation().getLongitude());
         googleMap.addMarker( new MarkerOptions()
                 .position( latLng ));
