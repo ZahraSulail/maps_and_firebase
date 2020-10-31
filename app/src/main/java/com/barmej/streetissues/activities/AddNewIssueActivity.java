@@ -1,4 +1,5 @@
-package com.barmej.streetissues.activities;
+
+ package com.barmej.streetissues.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -104,8 +105,6 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     private TextInputEditText mIssueTilteTextInputEditText;
     private TextInputEditText mIssueDescriptionTextInputEditText;
     private ImageView mIssueImageView;
-    private Button mChoosePhotoButton;
-    private Button mAddIssueButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,8 +133,8 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         mIssueTilteTextInputEditText = findViewById( R.id.edit_text_title );
         mIssueDescriptionTextInputEditText = findViewById( R.id.edit_text_description );
         mIssueImageView = findViewById( R.id.image_view_photo );
-        mChoosePhotoButton = findViewById( R.id.button_choose_photo );
-        mAddIssueButton = findViewById( R.id.button_add_issue );
+        Button mChoosePhotoButton = findViewById( R.id.button_choose_photo );
+        Button mAddIssueButton = findViewById( R.id.button_add_issue );
 
         /*
           Call requestLocationPermission() and requestStoragePermission() methods
@@ -228,10 +227,9 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                                 final Issue journey = new Issue();
                                 journey.setTitle( mIssueTilteTextInputEditText.getText().toString() );
                                 journey.setDescription( mIssueDescriptionTextInputEditText.getText().toString() );
-
-                                journey.setPhoto( task.toString() );
+                                journey.setPhoto( task.getResult().toString() );
                                 journey.setLocation( new GeoPoint( mSelectedLating.latitude, mSelectedLating.longitude ) );
-                                firebaseFirestore.collection( "journeys" ).add( journey ).addOnCompleteListener( new OnCompleteListener<DocumentReference>() {
+                                firebaseFirestore.collection( "issues" ).add( journey ).addOnCompleteListener( new OnCompleteListener<DocumentReference>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentReference> task) {
                                         if (task.isSuccessful()) {
