@@ -2,7 +2,6 @@
  package com.barmej.streetissues.activities;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.barmej.streetissues.R;
 import com.barmej.streetissues.data.Issue;
@@ -92,9 +92,9 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     private GoogleMap mGoogleMap;
 
     /*
-     ProgressDialog variable
+     ProgressBar variable
      */
-    private ProgressDialog mDialog;
+    private ProgressBar progressBar;
 
     /*
      Required variables to joint the views to the activity
@@ -105,6 +105,8 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     private TextInputEditText mIssueTilteTextInputEditText;
     private TextInputEditText mIssueDescriptionTextInputEditText;
     private ImageView mIssueImageView;
+    Button mChoosePhotoButton;
+    Button mAddIssueButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,8 +135,9 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         mIssueTilteTextInputEditText = findViewById( R.id.edit_text_title );
         mIssueDescriptionTextInputEditText = findViewById( R.id.edit_text_description );
         mIssueImageView = findViewById( R.id.image_view_photo );
-        Button mChoosePhotoButton = findViewById( R.id.button_choose_photo );
-        Button mAddIssueButton = findViewById( R.id.button_add_issue );
+        mChoosePhotoButton = findViewById( R.id.button_choose_photo );
+        mAddIssueButton = findViewById( R.id.button_add_issue );
+        progressBar = findViewById( R.id.progress_bar );
 
         /*
           Call requestLocationPermission() and requestStoragePermission() methods
@@ -168,6 +171,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                     } else {
                         if (mIssuePhotoUri != null) {
                             addIssueToFirebase();
+                            hifeForm( true );
 
                         }
                     }
@@ -211,11 +215,6 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         StorageReference storageReference = firebaseStorage.getReference();
         final StorageReference photoStorageReference = storageReference.child( UUID.randomUUID().toString() );
         final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        mDialog = new ProgressDialog( this );
-        mDialog.setIndeterminate( true );
-        mDialog.setTitle( R.string.app_name );
-        mDialog.setMessage( getString( R.string.uploading_photo ) );
-        mDialog.show();
         photoStorageReference.putFile( mIssuePhotoUri ).addOnCompleteListener( new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -237,26 +236,25 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                                                 @Override
                                                 public void onDismissed(Snackbar transientBottomBar, int event) {
                                                     super.onDismissed( transientBottomBar, event );
-                                                    mDialog.dismiss();
+
                                                     finish();
                                                 }
                                             } ).show();
                                         } else {
                                             Snackbar.make( mCoordinatorLayout, R.string.add_issue_failed, Snackbar.LENGTH_LONG ).show();
-                                            mDialog.dismiss();
+
                                         }
                                     }
                                 } );
                             } else {
                                 Snackbar.make( mCoordinatorLayout, R.string.uploaded_task_failed, Snackbar.LENGTH_LONG ).show();
-                                mDialog.dismiss();
 
                             }
                         }
                     } );
                 } else {
                     Snackbar.make( mCoordinatorLayout, R.string.add_issue_failed, Snackbar.LENGTH_LONG );
-                    mDialog.dismiss();
+
                 }
             }
         } );
@@ -379,5 +377,17 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         intent.setType( "image/*" );
         startActivityForResult( Intent.createChooser( intent, getString( R.string.choose_photo ) ), REQUEST_GET_PHOTO );
 
+    }
+    private void hifeForm(boolean hide){
+        if(hide){
+            progressBar.setVisibility( View.VISIBLE );
+            mAddIssueButton.setVisibility( View.INVISIBLE );
+
+        }else{
+            progressBar.setVisibility( View.GONE );
+            mAddIssueButton.setVisibility( View.VISIBLE);
+
+
+        }
     }
 }
