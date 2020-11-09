@@ -62,8 +62,10 @@ public class IssuesListFragment extends Fragment implements IssueListAdapter.OnI
          */
         LinearLayoutManager layoutManager = new LinearLayoutManager( getContext());
         layoutManager.setReverseLayout( true );
-        layoutManager.setStackFromEnd( true );
+        //layoutManager.setStackFromEnd( true );
         mRecyclerView.setLayoutManager( layoutManager);
+        mRecyclerView.smoothScrollToPosition( 0 );
+
 
         /*
          ArrayList object
