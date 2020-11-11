@@ -31,45 +31,45 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private ViewPager mViewPager;
     private MenuItem listMenuItem;
-    private  MenuItem mapMenuItem;
+    private MenuItem mapMenuItem;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView( R.layout.activity_main);
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_main );
         /*
          Set tool bar
          */
-        mToolbar = findViewById(R.id.toolBar_home);
-        setSupportActionBar(mToolbar);
+        mToolbar = findViewById( R.id.toolBar_home );
+        setSupportActionBar( mToolbar );
 
         /*
           find viewPager by id
          */
-        mViewPager = findViewById(R.id.view_pager_home);
+        mViewPager = findViewById( R.id.view_pager_home );
 
 
         /*
          ViewPagerAdapter object
          */
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter( getSupportFragmentManager());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter( getSupportFragmentManager() );
 
         /*
           Add fragmnets to the viewPager adapter
          */
-        viewPagerAdapter.addFragment( new IssuesListFragment());
-        viewPagerAdapter.addFragment( new MapFragment());
+        viewPagerAdapter.addFragment( new IssuesListFragment() );
+        viewPagerAdapter.addFragment( new MapFragment() );
 
         /*
           Set adapter to the view pager
          */
-        mViewPager.setAdapter(viewPagerAdapter);
+        mViewPager.setAdapter( viewPagerAdapter );
 
         /*
           find floatingactionButton by id
          */
-        mAddFloatingActionButton = findViewById(R.id.button_add_new_issue);
+        mAddFloatingActionButton = findViewById( R.id.button_add_new_issue );
 
         /*
           AddFloatingActionButton setOnClickListener to start AddNewIssueActivity by intent
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         mAddFloatingActionButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity( new Intent(MainActivity.this, AddNewIssueActivity.class) );
+                startActivity( new Intent( MainActivity.this, AddNewIssueActivity.class ) );
             }
         } );
 
@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(position == 0) {
-                    bottomNavigationView.setSelectedItemId(R.id.action_list  );
+                if (position == 0) {
+                    bottomNavigationView.setSelectedItemId( R.id.action_list );
                 } else {
                     bottomNavigationView.setSelectedItemId( R.id.action_map );
                 }
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment getItem(int position) {
-            return fragments.get(position);
+            return fragments.get( position );
         }
 
         @Override
@@ -145,19 +145,19 @@ public class MainActivity extends AppCompatActivity {
             return fragments.size();
         }
 
-      public CharSequence getPageTitle(int position){
-            switch (position){
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
                 case 0:
-                    return getString(R.string.issues_list);
+                    return getString( R.string.issues_list );
                 case 1:
-                    return getString(R.string.issues_on_map);
+                    return getString( R.string.issues_on_map );
                 default:
                     return null;
             }
         }
 
-        public void addFragment(Fragment fragment){
-            fragments.add(fragment);
+        public void addFragment(Fragment fragment) {
+            fragments.add( fragment );
         }
     }
 }

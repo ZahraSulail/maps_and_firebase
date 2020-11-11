@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,11 +61,11 @@ public class IssuesListFragment extends Fragment implements IssueListAdapter.OnI
         /*
           Set layout manager of the recycler view to specify how to show issues list
          */
-        LinearLayoutManager layoutManager = new LinearLayoutManager( getContext());
-        layoutManager.setReverseLayout( true );
-        //layoutManager.setStackFromEnd( true );
-        mRecyclerView.setLayoutManager( layoutManager);
-        mRecyclerView.smoothScrollToPosition( 0 );
+        LinearLayoutManager layoutManager = new LinearLayoutManager( getContext() );
+        mRecyclerView.setLayoutManager( layoutManager );
+        mRecyclerView.addItemDecoration( new DividerItemDecoration( getContext(), DividerItemDecoration.VERTICAL ) );
+
+
 
 
         /*
@@ -80,21 +81,21 @@ public class IssuesListFragment extends Fragment implements IssueListAdapter.OnI
         /*
           Set adapter to the recycler view
          */
-        mRecyclerView.setAdapter(mIssuesListAdapter );
+        mRecyclerView.setAdapter( mIssuesListAdapter );
 
         /*
          Get data from the collection by firestore
          */
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection( "issues").addSnapshotListener( new EventListener<QuerySnapshot>() {
+        firebaseFirestore.collection( "issues" ).orderBy( "dateTime" ).addSnapshotListener( new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 mIssues.clear();
-                if(queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()){
-                    for(QueryDocumentSnapshot document: queryDocumentSnapshots){
+                if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Issue issue = document.toObject( Issue.class );
-                        mIssues.add(issue);
-                        System.out.println(issue.getTitle());
+                        mIssues.add( issue );
+                        System.out.println( issue.getTitle() );
                     }
 
                     //Notify adpter aboutnchange
@@ -109,8 +110,8 @@ public class IssuesListFragment extends Fragment implements IssueListAdapter.OnI
      */
     @Override
     public void onIssueClick(Issue issue) {
-        Intent intent = new Intent(getContext(), IssueDetailsActivity.class);
-        intent.putExtra( IssueDetailsActivity.ISSUE_DATA, issue);
-        startActivity(intent);
+        Intent intent = new Intent( getContext(), IssueDetailsActivity.class );
+        intent.putExtra( IssueDetailsActivity.ISSUE_DATA, issue );
+        startActivity( intent );
     }
 }

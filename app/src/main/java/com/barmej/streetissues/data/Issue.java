@@ -3,6 +3,7 @@ package com.barmej.streetissues.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
 public class Issue implements Parcelable {
@@ -11,6 +12,7 @@ public class Issue implements Parcelable {
     private String description;
     private String photo;
     private GeoPoint location;
+    private Timestamp dateTime;
 
 
     public Issue() {
@@ -28,6 +30,7 @@ public class Issue implements Parcelable {
         description = in.readString();
         photo = in.readString();
         location = new GeoPoint( in.readDouble(), in.readDouble() );
+        dateTime = in.readParcelable( Timestamp.class.getClassLoader() );
     }
 
     public static final Creator<Issue> CREATOR = new Creator<Issue>() {
@@ -79,12 +82,25 @@ public class Issue implements Parcelable {
         return 0;
     }
 
+
+    public Timestamp getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Timestamp dateTime) {
+        this.dateTime = dateTime;
+    }
+
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(title);
-        dest.writeString(description);
-        dest.writeString(photo);
-        dest.writeDouble(location.getLatitude());
-        dest.writeDouble(location.getLongitude());
+        dest.writeString( title );
+        dest.writeString( description );
+        dest.writeString( photo );
+        dest.writeDouble( location.getLatitude() );
+        dest.writeDouble( location.getLongitude() );
+        dest.writeParcelable( dateTime, flags );
     }
+
+
 }

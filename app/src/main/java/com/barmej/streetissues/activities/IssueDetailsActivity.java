@@ -42,24 +42,24 @@ public class IssueDetailsActivity extends AppCompatActivity implements OnMapRead
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_issue_details);
+        setContentView( R.layout.activity_issue_details );
         /*
           Set tool bar
          */
-        mToolbar = findViewById( R.id.toolBar_home);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar = findViewById( R.id.toolBar_home );
+        setSupportActionBar( mToolbar );
+        getSupportActionBar().setDisplayHomeAsUpEnabled( true );
 
         /*
          Find views by id's
          */
-        mIssueImageView = findViewById(R.id.image_view__issue_photo);
-        mIssueTitleTextView = findViewById(R.id.text_view_issue_title);
-        mIssueDescriptionTextView = findViewById(R.id.text_view_issue_description);
+        mIssueImageView = findViewById( R.id.image_view__issue_photo );
+        mIssueTitleTextView = findViewById( R.id.text_view_issue_title );
+        mIssueDescriptionTextView = findViewById( R.id.text_view_issue_description );
         mMapView = findViewById( R.id.map_view );
         mMapView.onCreate( savedInstanceState );
         Bundle mapViewBundle = null;
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle( MAPVIEW_BUNDLE_KEY );
 
         }
@@ -71,12 +71,12 @@ public class IssueDetailsActivity extends AppCompatActivity implements OnMapRead
         /*
           getIntent to get dat from Issue object
          */
-        if(getIntent() != null && getIntent().getExtras() != null){
-            issue = getIntent().getExtras().getParcelable(ISSUE_DATA);
-            if(issue!= null){
-                getSupportActionBar().setTitle(issue.getTitle());
-                mIssueDescriptionTextView.setText(issue.getDescription());
-                Glide.with( this).load(issue.getPhoto()).into(mIssueImageView);
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            issue = getIntent().getExtras().getParcelable( ISSUE_DATA );
+            if (issue != null) {
+                getSupportActionBar().setTitle( issue.getTitle() );
+                mIssueDescriptionTextView.setText( issue.getDescription() );
+                Glide.with( this ).load( issue.getPhoto() ).into( mIssueImageView );
 
             }
         }
@@ -86,23 +86,23 @@ public class IssueDetailsActivity extends AppCompatActivity implements OnMapRead
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState( outState );
         Bundle mapViewBundle = outState.getBundle( MAPVIEW_BUNDLE_KEY );
-        if(mapViewBundle == null){
+        if (mapViewBundle == null) {
             mapViewBundle = new Bundle();
             outState.putBundle( MAPVIEW_BUNDLE_KEY, mapViewBundle );
         }
         mMapView.onSaveInstanceState( mapViewBundle );
     }
 
-/*
-  Displaying Issue geopoint location on the map
- */
+    /*
+      Displaying Issue geopoint location on the map
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mGoogleMap = googleMap;
-        LatLng latLng = new LatLng(issue.getLocation().getLatitude(), issue.getLocation().getLongitude());
+        LatLng latLng = new LatLng( issue.getLocation().getLatitude(), issue.getLocation().getLongitude() );
         googleMap.addMarker( new MarkerOptions()
-                .position( latLng ));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( latLng, 16  );
+                .position( latLng ) );
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( latLng, 16 );
         googleMap.moveCamera( cameraUpdate );
 
     }

@@ -1,5 +1,5 @@
 
- package com.barmej.streetissues.activities;
+package com.barmej.streetissues.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -30,6 +30,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -37,6 +38,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Date;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -104,6 +106,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     private TextInputLayout mIssuedescriptionTextInputLayout;
     private TextInputEditText mIssueTilteTextInputEditText;
     private TextInputEditText mIssueDescriptionTextInputEditText;
+    private Date mIssueDate;
     private ImageView mIssueImageView;
     Button mChoosePhotoButton;
     Button mAddIssueButton;
@@ -155,6 +158,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
             }
         } );
 
+
         /*
           AddIssueButton setOnclickListener to add a new Issue information to the firebase
          */
@@ -169,14 +173,17 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                     if (TextUtils.isEmpty( mIssueDescriptionTextInputEditText.getText() )) {
                         mIssuedescriptionTextInputLayout.setError( getString( R.string.error_msg_description ) );
                     } else {
-                        if (mIssuePhotoUri != null) {
-                            addIssueToFirebase();
-                            hifeForm( true );
 
+                        if (mIssuePhotoUri != null) {
+                            hidForm( true );
+                            addIssueToFirebase();
                         }
+
+
                     }
                 }
             }
+
         } );
 
         // get last location
@@ -208,7 +215,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     }
 
     /*
-      AddIssueTo firebase method
+      AddIssueToFirebase method
      */
     private void addIssueToFirebase() {
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
@@ -223,12 +230,13 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
-                                final Issue journey = new Issue();
-                                journey.setTitle( mIssueTilteTextInputEditText.getText().toString() );
-                                journey.setDescription( mIssueDescriptionTextInputEditText.getText().toString() );
-                                journey.setPhoto( task.getResult().toString() );
-                                journey.setLocation( new GeoPoint( mSelectedLating.latitude, mSelectedLating.longitude ) );
-                                firebaseFirestore.collection( "issues" ).add( journey ).addOnCompleteListener( new OnCompleteListener<DocumentReference>() {
+                                final Issue issue = new Issue();
+                                issue.setTitle( mIssueTilteTextInputEditText.getText().toString() );
+                                issue.setDescription( mIssueDescriptionTextInputEditText.getText().toString() );
+                                issue.setPhoto( task.getResult().toString() );
+                                issue.setLocation( new GeoPoint( mSelectedLating.latitude, mSelectedLating.longitude ) );
+                                issue.setDateTime( new Timestamp( new Date() ) );
+                                firebaseFirestore.collection( "issues" ).add( issue ).addOnCompleteListener( new OnCompleteListener<DocumentReference>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentReference> task) {
                                         if (task.isSuccessful()) {
@@ -242,18 +250,21 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                                             } ).show();
                                         } else {
                                             Snackbar.make( mCoordinatorLayout, R.string.add_issue_failed, Snackbar.LENGTH_LONG ).show();
+                                            hidForm( false );
 
                                         }
                                     }
                                 } );
                             } else {
                                 Snackbar.make( mCoordinatorLayout, R.string.uploaded_task_failed, Snackbar.LENGTH_LONG ).show();
+                                hidForm( false );
 
                             }
                         }
                     } );
                 } else {
                     Snackbar.make( mCoordinatorLayout, R.string.add_issue_failed, Snackbar.LENGTH_LONG );
+                    hidForm( false );
 
                 }
             }
@@ -378,16 +389,19 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         startActivityForResult( Intent.createChooser( intent, getString( R.string.choose_photo ) ), REQUEST_GET_PHOTO );
 
     }
-    private void hifeForm(boolean hide){
-        if(hide){
+
+    private void hidForm(boolean hide) {
+        if (hide) {
             progressBar.setVisibility( View.VISIBLE );
             mAddIssueButton.setVisibility( View.INVISIBLE );
 
-        }else{
+        } else {
             progressBar.setVisibility( View.GONE );
-            mAddIssueButton.setVisibility( View.VISIBLE);
+            mAddIssueButton.setVisibility( View.VISIBLE );
 
 
         }
     }
+
+
 }

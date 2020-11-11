@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class IssueListAdapter extends RecyclerView.Adapter<IssueListAdapter.IssueViewHolder> {
 
-    public interface OnIssueClickListener{
+    public interface OnIssueClickListener {
         void onIssueClick(Issue issue);
     }
 
@@ -26,21 +26,22 @@ public class IssueListAdapter extends RecyclerView.Adapter<IssueListAdapter.Issu
 
     private List<Issue> mIssuesList;
 
-    public IssueListAdapter(List<Issue> IssuesList,OnIssueClickListener onIssueClickListener){
+    public IssueListAdapter(List<Issue> IssuesList, OnIssueClickListener onIssueClickListener) {
         this.mIssuesList = IssuesList;
         this.mOnIssueClickListener = onIssueClickListener;
 
     }
+
     @NonNull
     @Override
     public IssueListAdapter.IssueViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from( parent.getContext()).inflate( R.layout.item_issue, parent, false);
+        View view = LayoutInflater.from( parent.getContext() ).inflate( R.layout.item_issue, parent, false );
         return new IssueViewHolder( view );
     }
 
     @Override
     public void onBindViewHolder(@NonNull IssueListAdapter.IssueViewHolder holder, int position) {
-       holder.bind( mIssuesList.get(position));
+        holder.bind( mIssuesList.get( position ) );
     }
 
     @Override
@@ -53,25 +54,27 @@ public class IssueListAdapter extends RecyclerView.Adapter<IssueListAdapter.Issu
         TextView issueTitleTextView;
         ImageView issuePhotoImageView;
         Issue issue;
+
         public IssueViewHolder(@NonNull View itemView) {
             super( itemView );
 
             issueTitleTextView = itemView.findViewById( R.id.text_view_issue_title );
-            issuePhotoImageView = itemView.findViewById(R.id.image_view__issue_photo);
+            issuePhotoImageView = itemView.findViewById( R.id.image_view__issue_photo );
             itemView.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnIssueClickListener.onIssueClick(issue);
+                    mOnIssueClickListener.onIssueClick( issue );
                 }
             } );
 
 
         }
-        public void bind(Issue issue){
+
+        public void bind(Issue issue) {
             this.issue = issue;
-            issueTitleTextView.setText( issue.getTitle());
-            Glide.with( issuePhotoImageView).load( issue.getPhoto()).into(issuePhotoImageView);
-            Log.i("", "issue link"+issue.getPhoto());
+            issueTitleTextView.setText( issue.getTitle() );
+            Glide.with( issuePhotoImageView ).load( issue.getPhoto() ).into( issuePhotoImageView );
+            Log.i( "", "issue link" + issue.getPhoto() );
 
         }
 

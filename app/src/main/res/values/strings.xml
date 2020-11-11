@@ -17,4 +17,6 @@
     <string name="uploaded_task_failed">Uploaded task failed</string>
     <string name="error_msg_title">Title can\'t be empty</string>
     <string name="error_msg_description">Description can\'t be empty</string>
+    <string name="issue_date">تاريخ اضافة المشكلة</string>
+    <string name="error_msg_date">Date can\'t be empty</string>
 </resources>

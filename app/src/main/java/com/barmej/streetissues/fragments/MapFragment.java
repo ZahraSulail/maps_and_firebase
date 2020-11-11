@@ -31,6 +31,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
      MapView to view google map within the fragment
      */
     private MapView mMapView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,35 +46,36 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         //Find Views by id's
         mMapView = view.findViewById( R.id.view_map );
         mMapView.onCreate( savedInstanceState );
-        mMapView.getMapAsync(this);
+        mMapView.getMapAsync( this );
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState( outState );
         //Bundle to save state of the map
-        mMapView.onSaveInstanceState( outState);
+        mMapView.onSaveInstanceState( outState );
     }
+
     /*
       Get data from the collection on firestore databas and set map marker
      */
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection( "issues").get().addOnCompleteListener( new OnCompleteListener<QuerySnapshot>() {
+        firebaseFirestore.collection( "issues" ).get().addOnCompleteListener( new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
 
-                    for(QueryDocumentSnapshot document : task.getResult()){
-                       Issue issue = document.toObject( Issue.class );
-                        LatLng latLng = new LatLng(issue.getLocation().getLatitude(), issue.getLocation().getLongitude());
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Issue issue = document.toObject( Issue.class );
+                        LatLng latLng = new LatLng( issue.getLocation().getLatitude(), issue.getLocation().getLongitude() );
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position( latLng );
-                        markerOptions.title( issue.getTitle());
-                        markerOptions.icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                        markerOptions.title( issue.getTitle() );
+                        markerOptions.icon( BitmapDescriptorFactory.defaultMarker( BitmapDescriptorFactory.HUE_BLUE ) );
                         Marker marker = googleMap.addMarker( markerOptions );
-                        marker.setTag(issue);
+                        marker.setTag( issue );
 
                     }
 
@@ -81,13 +83,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
             }
         } );
-        googleMap.setOnInfoWindowClickListener(this);
+        googleMap.setOnInfoWindowClickListener( this );
     }
 
 
-/*
-  Lifecycle of the Map
- */
+    /*
+      Lifecycle of the Map
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -119,14 +121,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mMapView.onDestroy();
     }
 
-/*
-   An intent to pass object data to the IsseueDetaisActivity
- */
+    /*
+       An intent to pass object data to the IsseueDetaisActivity
+     */
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Intent intent = new Intent(getContext(), IssueDetailsActivity.class);
-        intent.putExtra( IssueDetailsActivity.ISSUE_DATA, (Issue) marker.getTag());
-        startActivity(intent);
+        Intent intent = new Intent( getContext(), IssueDetailsActivity.class );
+        intent.putExtra( IssueDetailsActivity.ISSUE_DATA, (Issue) marker.getTag() );
+        startActivity( intent );
 
     }
 }

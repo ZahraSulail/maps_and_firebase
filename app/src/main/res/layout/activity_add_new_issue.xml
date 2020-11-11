@@ -79,19 +79,16 @@
                     android:textColor="@color/colorPrimaryDark" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
-
-
             <ImageView
                 android:id="@+id/image_view_photo"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="150dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:scaleType="centerCrop"
+                android:layout_marginBottom="8dp"
                 android:background="@color/colorAccent"
+                android:scaleType="centerCrop"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <Button
@@ -108,14 +105,13 @@
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                tools:context=".MapsActivity"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="4dp"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:context=".MapsActivity" />
 
             <ProgressBar
                 android:id="@+id/progress_bar"
@@ -126,6 +122,7 @@
                 android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/map"
                 tools:visibility="visible" />
+
             <Button
                 android:id="@+id/button_add_issue"
                 android:layout_width="match_parent"
