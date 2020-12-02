@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.barmej.streetissues.R;
 import com.barmej.streetissues.data.Issue;
@@ -110,6 +111,8 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     private ImageView mIssueImageView;
     Button mChoosePhotoButton;
     Button mAddIssueButton;
+    Issue mIssue;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +152,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         requestStoragePermission();
 
         /*
-         MchoosePhotoButton setOnclickListener to lunch Gallery within device or emulator by intent
+         MchoosePhotoButton setOnclickListener to lunch gallery within device or emulator by intent
          */
         mChoosePhotoButton.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -165,6 +168,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         mAddIssueButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mIssue = new Issue();
                 mIssueTitleTextInputLayout.setError( null );
                 mIssuedescriptionTextInputLayout.setError( null );
                 if (TextUtils.isEmpty( mIssueTilteTextInputEditText.getText() )) {
@@ -172,14 +176,12 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                 } else {
                     if (TextUtils.isEmpty( mIssueDescriptionTextInputEditText.getText() )) {
                         mIssuedescriptionTextInputLayout.setError( getString( R.string.error_msg_description ) );
+                    }
+                    if (mIssuePhotoUri != null && mIssue.getLocation() != null) {
+                        hidForm( true );
+                        addIssueToFirebase();
                     } else {
-
-                        if (mIssuePhotoUri != null) {
-                            hidForm( true );
-                            addIssueToFirebase();
-                        }
-
-
+                        Toast.makeText( AddNewIssueActivity.this, R.string.please_insert_an_image_and_add_location, Toast.LENGTH_SHORT ).show();
                     }
                 }
             }

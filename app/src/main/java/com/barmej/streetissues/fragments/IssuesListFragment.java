@@ -87,7 +87,7 @@ public class IssuesListFragment extends Fragment implements IssueListAdapter.OnI
          Get data from the collection by firestore
          */
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection( "issues" ).orderBy( "dateTime" ).addSnapshotListener( new EventListener<QuerySnapshot>() {
+        firebaseFirestore.collection( "issues" ).orderBy( "dateTime", com.google.firebase.firestore.Query.Direction.DESCENDING ).addSnapshotListener( new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 mIssues.clear();

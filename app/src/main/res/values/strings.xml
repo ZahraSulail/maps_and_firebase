@@ -15,8 +15,8 @@
     <string name="add_issue_success">Add issue successed</string>
     <string name="add_issue_failed">Add issue failed</string>
     <string name="uploaded_task_failed">Uploaded task failed</string>
-    <string name="error_msg_title">Title can\'t be empty</string>
-    <string name="error_msg_description">Description can\'t be empty</string>
-    <string name="issue_date">تاريخ اضافة المشكلة</string>
+    <string name="error_msg_title">لا تترك الحقل فارغا</string>
+    <string name="error_msg_description">لا تترك الحقل فارغا</string>
     <string name="error_msg_date">Date can\'t be empty</string>
+    <string name="please_insert_an_image_and_add_location">رجاء اضف صورة و موقع المشكلة</string>
 </resources>
