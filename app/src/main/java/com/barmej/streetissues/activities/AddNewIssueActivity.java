@@ -111,7 +111,6 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     private ImageView mIssueImageView;
     Button mChoosePhotoButton;
     Button mAddIssueButton;
-    Issue mIssue;
 
 
     @Override
@@ -166,27 +165,27 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
           AddIssueButton setOnclickListener to add a new Issue information to the firebase
          */
         mAddIssueButton.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mIssue = new Issue();
-                mIssueTitleTextInputLayout.setError( null );
-                mIssuedescriptionTextInputLayout.setError( null );
-                if (TextUtils.isEmpty( mIssueTilteTextInputEditText.getText() )) {
-                    mIssueTitleTextInputLayout.setError( getString( R.string.error_msg_title ) );
-                } else {
-                    if (TextUtils.isEmpty( mIssueDescriptionTextInputEditText.getText() )) {
-                        mIssuedescriptionTextInputLayout.setError( getString( R.string.error_msg_description ) );
-                    }
-                    if (mIssuePhotoUri != null && mIssue.getLocation() != null) {
-                        hidForm( true );
-                        addIssueToFirebase();
-                    } else {
-                        Toast.makeText( AddNewIssueActivity.this, R.string.please_insert_an_image_and_add_location, Toast.LENGTH_SHORT ).show();
-                    }
-                }
-            }
+                                                @Override
+                                                public void onClick(View v) {
 
-        } );
+                                                    mIssueTitleTextInputLayout.setError( null );
+                                                    mIssuedescriptionTextInputLayout.setError( null );
+                                                    if (TextUtils.isEmpty( mIssueTilteTextInputEditText.getText() )) {
+                                                        mIssueTitleTextInputLayout.setError( getString( R.string.error_msg_title ) );
+                                                    } else if (TextUtils.isEmpty( mIssueDescriptionTextInputEditText.getText() )) {
+                                                        mIssuedescriptionTextInputLayout.setError( getString( R.string.error_msg_description ) );
+                                                    } else if (mIssuePhotoUri == null) {
+                                                        Toast.makeText( AddNewIssueActivity.this, R.string.insert_photo, Toast.LENGTH_LONG ).show();
+                                                    } else if (mSelectedLating == null) {
+                                                        Toast.makeText( AddNewIssueActivity.this, R.string.add_issue_location, Toast.LENGTH_LONG ).show();
+                                                    } else {
+                                                        hidForm( true );
+                                                        addIssueToFirebase();
+                                                    }
+                                                }
+
+                                            }
+        );
 
         // get last location
         mLocationProviderClaint = LocationServices.getFusedLocationProviderClient( this );
@@ -265,7 +264,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                         }
                     } );
                 } else {
-                    Snackbar.make( mCoordinatorLayout, R.string.add_issue_failed, Snackbar.LENGTH_LONG );
+                    Snackbar.make( mCoordinatorLayout, R.string.add_issue_failed, Snackbar.LENGTH_LONG ).show();
                     hidForm( false );
 
                 }
@@ -400,10 +399,6 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         } else {
             progressBar.setVisibility( View.GONE );
             mAddIssueButton.setVisibility( View.VISIBLE );
-
-
         }
     }
-
-
 }

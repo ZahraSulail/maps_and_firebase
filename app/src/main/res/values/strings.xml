@@ -6,17 +6,18 @@
     <string name="title">العنوان</string>
     <string name="description">التفاصيل</string>
     <string name="date_sample">5 مايو 2019</string>
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="choose_photo">اختر صورة</string>
     <string name="add_new_issue">ابلغ عن مشكلة</string>
     <string name="photo_selected_error">"An error "</string>
-    <string name="uploading_photo">Uploading Photo...</string>
-    <string name="add_issue_success">Add issue successed</string>
-    <string name="add_issue_failed">Add issue failed</string>
-    <string name="uploaded_task_failed">Uploaded task failed</string>
+    <string name="uploading_photo">تحميل الصورة...</string>
+    <string name="add_issue_success">تم اضافة المشكلة بنجاح</string>
+    <string name="add_issue_failed">فشل في اضافة المشكلة</string>
+    <string name="uploaded_task_failed">فشل في عملية الاضافة</string>
     <string name="error_msg_title">لا تترك الحقل فارغا</string>
     <string name="error_msg_description">لا تترك الحقل فارغا</string>
-    <string name="error_msg_date">Date can\'t be empty</string>
-    <string name="please_insert_an_image_and_add_location">رجاء اضف صورة و موقع المشكلة</string>
+    <string name="error_msg_date">لا تترك الحقل فارغا</string>
+    <string name="insert_photo">يجب اضافة صورة</string>
+    <string name="add_issue_location">يجب اضافة احداثيات المشكلة</string>
+
 </resources>
